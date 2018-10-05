@@ -1,12 +1,11 @@
 #!/usr/bin/python
 
 from __future__ import print_function
-
 import sys
 import os
 import re
-
 import textwrap
+import subprocess 
 from subprocess import Popen, PIPE
 
 '''
@@ -17,8 +16,6 @@ from subprocess import Popen, PIPE
 
                    Also used as a teaching aid in UW's
                    CHEM 465/565 Computations in Chemistry.
-
-  Maintained by Andrew Wildman
 '''
 
 #----------------------------------------------------------------------------
@@ -37,36 +34,31 @@ def get_user_input():
     #--------------------------------------
 
     #--------------------------------------
-    # Check arguments
-    if len(sys.argv) == 1:
-        print('No files specified')
-        exit()
+    # There should only be one argument: the Gaussian input file.
     if len(sys.argv) != 2: 
-        print("Using the same parameters for all files")
-        print(sys.argv[1:])
-        print()
+        print(textwrap.fill(textwrap.dedent("""\
+            ERROR: There should only be one argument to 
+            gaussian-sub.py""")))
+        sys.exit()
     if sys.argv[1] == '-h' or 'help' in sys.argv[1]:
         print_help()
         sys.exit()  
     #--------------------------------------
-    
+
     #--------------------------------------
     # Check that the argument is a .com or .gjf and that it exists.
-    f_input = []
-    for fil in sys.argv[1:]:
-        f_temp= fil.split('.')
-        if not os.path.isfile(fil):
-            print('ERROR: The input file '+fil+' does not exist')
-            sys.exit()
-        if len(f_temp) != 2:
-            print('ERROR: The filename must include the extension')
-            sys.exit()
-        if f_temp[-1] != 'com' and f_temp[-1] != 'gjf':
-            print('ERROR: The file extension must be .com or .gjf')
-            sys.exit()
-        f_input.append(f_temp)
+    f_input= sys.argv[1].split('.')
+    if not os.path.isfile(sys.argv[1]):
+        print('ERROR: The input file '+sys.argv[1]+' does not exist')
+        sys.exit()
+    if len(f_input) != 2:
+        print('ERROR: The filename must include the extension')
+        sys.exit()
+    if f_input[1] != 'com' and f_input[1] != 'gjf':
+        print('ERROR: The file extension must be .com or .gjf')
+        sys.exit()
     #--------------------------------------
-    
+
     #--------------------------------------
     # Check that the user has the right permissions to use Gaussian.
     username = Popen('whoami',stdout=PIPE).stdout.read().strip()
@@ -86,62 +78,68 @@ def get_user_input():
     # Determine which queue to submit to.
     queue = raw_input(textwrap.fill(textwrap.dedent("""\
             Which queue would you like to submit to?
-            [batch] - (default) or [ckpt] : """),100))
+            [batch] - (default) or [bf|ckpt] : """),100))
     if queue == '': queue = 'batch'
-    if queue == 'bf': queue = 'ckpt'
-    if queue != 'batch' and queue != 'ckpt':
-        print('ERROR: Invalid option for a queue. Must be batch or ckpt')
+    if queue == 'bf' and gen == 'mox': queue = 'ckpt'
+    if queue == 'ckpt' and gen == 'ikt': queue = 'bf'
+    if queue != 'batch' and queue != 'bf' and queue != 'ckpt':
+        print('ERROR: Invalid option for a queue. Must be batch, bf, or ckpt')
         sys.exit()
     print('Using the '+queue+' queue\n')
     #--------------------------------------
-    
+
     #--------------------------------------
-    # Determine which group's nodes to use.
+    # Determine which group's nodes to use. STF is the default if available.
     allocation = ''
     if queue == 'batch' or queue == 'ckpt':
         allocs= []
-        command = 'sinfo -o "%P"'
-        partitions = Popen(command,stdout=PIPE,shell=True).stdout.read().split()[1:]
         for group in groups:
-            if 'hyak-' in group:
-                if 'test' not in group and 'highmem' not in group:
-                    if group.split('-')[1] in partitions:
-                        allocs.append(group)
-        print('Whose allocation would you like to use?')
-        for allocation in allocs:
-            print('['+allocation+']',end=' ') 
-        print(': ',end='')
-        allocation = raw_input('')
-        if allocation == '':
-            print(textwrap.fill(textwrap.dedent("""\
-                ERROR: You must specify an allocation"""),100))
-            sys.exit()
-        elif allocation not in allocs:
-            print(textwrap.fill(textwrap.dedent("""\
-                ERROR: You must choose an allocation that you 
-                are a part of"""),100))
-            sys.exit()
+            if 'hyak-' in group and 'test' not in group: allocs.append(group)
+        if len(allocs) > 1:
+            print('Whose allocation would you like to use?')
+            for allocation in allocs:
+                print('['+allocation+']',end=' ') 
+                if 'hyak-stf' in allocation: print('- (default) ',end='')
+            if 'hyak-stf' not in allocs: print('- (default) ',end='')
+            print(': ',end='')
+            allocation = raw_input('')
+            if allocation == '' and 'hyak-stf' in allocs: 
+                allocation = 'hyak-stf'
+            elif allocation == '' and 'hyak-stf' not in allocs: 
+                allocation = allocs[-1]
+            if allocation not in allocs:
+                print(textwrap.fill(textwrap.dedent("""\
+                    ERROR: You must choose an allocation that you 
+                    are a part of"""),100))
+                sys.exit()
+        else:
+            allocation = str(allocs[0])
         print('Submitting to the '+allocation+' allocation\n')
     #--------------------------------------
 
     #--------------------------------------
     # Ask how many nodes to use.
     if queue == 'batch':
-        print('Checking how many nodes are in this allocation...')
-        allocation_name = allocation.split('-')
-        command = 'hyakalloc | grep '+allocation_name[1]
-        specs = Popen(command,stdout=PIPE,shell=True).stdout.read().split()
-        max_nodes = int(specs[1])
-        smallest_mem = int(specs[2][:-1])
+        if allocation != 'hyak-stf':
+            print('Checking how many nodes are in this allocation...')
+            allocation_name = allocation.split('-')
+            if gen == 'ikt':
+                command = 'nodestate '+allocation_name[1]+' | grep n0 | wc -l'
+                max_nodes = Popen(command,stdout=PIPE,shell=True)
+                max_nodes = int(max_nodes.stdout.read())
+            elif gen == 'mox':
+                command = 'hyakalloc | grep '+allocation_name[1]
+                specs = Popen(command,stdout=PIPE,shell=True).stdout.read().split()
+                max_nodes = int(specs[1])
+                smallest_mem = int(specs[2][:-1])
+        else: # STF allocation
+            if   gen == 'ikt': max_nodes = 54
+            elif gen == 'mox': max_nodes = 40
     else:
         max_nodes = 1000
-
     n_nodes = raw_input('How many nodes do you want to use? (default=1) : ')
-    if n_nodes == '':
-        n_nodes = 1
-    else:
-        n_nodes = int(n_nodes)
-
+    if n_nodes == '': n_nodes = 1
+    else: n_nodes = int(n_nodes)
     if max_nodes == 0:
         print(textwrap.fill(textwrap.dedent("""\
             ERROR: There are no nodes available for this allocation"""),100))
@@ -151,92 +149,102 @@ def get_user_input():
             ERROR: You must select at least one node and
             less than %d""" % max_nodes),100))
         sys.exit()
-
-    if n_nodes > 1:
-        linda = True
-    else:
-        linda = False
-
+    if n_nodes > 1: linda = True
+    else: linda = False
     if linda:
-        print(textwrap.fill(textwrap.dedent("""\
-            NOTE: You must include "%lindaworker" in your input file when 
-            using more than one node. Some version also require including
-            %UseSSH in your Gaussian input file."""),60)) 
+        print('NOTE: You must include "%lindaworker" in your\n'
+             +'      input file when using more than one node') 
     #--------------------------------------
  
     #--------------------------------------
     # Ask how many cores/memory on each node to use.
-    print('Checking what types of nodes are in this allocation...')
     if queue == 'batch':
-        command = 'sinfo -p ' + allocation_name[1] + ' -e -O "nodes,cpus"'
-        specs = Popen(command, stdout=PIPE, shell=True).stdout.read().split()
+        if allocation != 'hyak-stf':
+            print('Checking what types of nodes are in this allocation...')
+            if gen == 'ikt':
+                command = 'mdiagn -t '+allocation_name[1]+' | grep ":28 " | wc -l'
+                max_28_cores = Popen(command,stdout=PIPE,shell=True)
+                max_28_cores = int(max_28_cores.stdout.read())
+                if max_28_cores != 0: smallest_node = 28 
+                command = 'mdiagn -t '+allocation_name[1]+' | grep ":16 " | wc -l'
+                max_16_cores = Popen(command,stdout=PIPE,shell=True)
+                max_16_cores = int(max_16_cores.stdout.read())
+                if max_16_cores != 0: smallest_node = 16 
+                command = 'mdiagn -t '+allocation_name[1]+' | grep ":12 " | wc -l'
+                max_12_cores = Popen(command,stdout=PIPE,shell=True)
+                max_12_cores = int(max_12_cores.stdout.read())
+                if max_12_cores != 0: smallest_node = 12 
+                command = 'mdiagn -t '+allocation_name[1]+' | grep ":8 " | wc -l'
+                max_8_cores = Popen(command,stdout=PIPE,shell=True)
+                max_8_cores = int(max_8_cores.stdout.read())
+                if max_8_cores != 0: smallest_node = 8
+            elif gen == 'mox':
+                command = 'hyakalloc '+allocation_name[1]
+                specs = Popen(command,stdout=PIPE,shell=True).stdout.read().split()
+                smallest_node = 28
+                max_8_cores   = 0
+                max_12_cores  = 0
+                max_16_cores  = 0
+                max_28_cores  = int(specs[11])
+        else:
+            if gen == 'ikt':
+                smallest_node = 16
+                max_8_cores   = 0
+                max_12_cores  = 0
+                max_16_cores  = 54
+            elif gen == 'mox':
+                smallest_node = 28
+                max_8_cores   = 0
+                max_12_cores  = 0
+                max_16_cores  = 0
+                max_28_cores  = 40
     else:
-        command = 'sinfo -p ckpt -e -O "nodes,cpus"'
-        specs = Popen(command, stdout=PIPE, shell=True).stdout.read().split()
-    nodes_per_cpu = {}
-    for i in range(1, len(specs)//2):
-        nodes_per_cpu[int(specs[2*i+1])] =  int(specs[2*i])
-    smallest_node = min(nodes_per_cpu)
+        if gen == 'ikt':
+            smallest_node = 8
+            max_8_cores   = 171
+            max_12_cores  = 257
+            max_16_cores  = 430
+            max_28_cores  = 0
+        elif gen == 'mox':
+            smallest_node = 28
+            max_8_cores   = 0
+            max_12_cores  = 0
+            max_16_cores  = 0
+            max_28_cores  = 208
     n_cores = raw_input(textwrap.fill(textwrap.dedent("""\
               How many cores do you want to use
               on each node? (default=%d) : """ % smallest_node).strip()))
-
-    if n_cores == '':
-        n_cores = 0
-    else:
-        n_cores = int(n_cores)
-
-    if n_cores > max(nodes_per_cpu):
+    if n_cores == '': n_cores = 0
+    if int(n_cores) < smallest_node:
         print(textwrap.fill(textwrap.dedent("""\
-            You cannot request more than the maximum
-            number of cores on this allocation. (%d)""" % (max(nodes_per_cpu))),100))
-        exit()
-
-    try:
-        max_nodes = nodes_per_cpu[n_cores]
-    except KeyError:
-        for cores in sorted(nodes_per_cpu):
-            if n_cores < cores:
-                max_nodes = nodes_per_cpu[cores]
-                print(textwrap.fill(textwrap.dedent("""\
-                    Requesting all the cores on the smallest node (%d)
-                    that fits the requested number (%d)""" % (cores, n_cores)),100))
-                n_cores = cores
-                break
-
-    if n_nodes > max_nodes:
-        n_nodes = max_nodes
-        print('You requested too many nodes with '+n_cores+' cores')
-        print('Resetting to maximum number of nodes with that many cores (%d)' %(max_nodes))
-
-
-    print('Checking available memory for the requested nodes...')
-    if queue == 'batch':
-        command = 'sinfo -p ' + allocation_name[1] + ' -e -O "cpus,memory" | grep ^' + str(n_cores)
-        specs = Popen(command, stdout=PIPE, shell=True).stdout.read().split()
+            Setting number of cores to be the smallest
+            option in this allocation"""),100))
+        n_cores = smallest_node
+    too_much = True
+    if n_cores == 8 and n_nodes > max_8_cores:
+        n_nodes = max_8_cores
+    elif n_cores == 12 and n_nodes > max_12_cores:
+        n_nodes = max_12_cores
+    elif n_cores == 16 and n_nodes > max_16_cores:
+        n_nodes = max_16_cores
     else:
-        command = 'sinfo -p ckpt -e -O "cpus,memory" | grep ^' + str(n_cores)
-        specs = Popen(command, stdout=PIPE, shell=True).stdout.read().split()
-    # - 10 for os overhead
-    mem_types = [int(specs[2*i+1])//1000 - 10 for i in range(len(specs)//2)]
-    smallest_mem = min(mem_types)
-    max_mem = max(mem_types)
+        too_much = False
+    if too_much:
+        print('You requested too many nodes with '+n_cores+' cores'
+             +'Resetting to maximum number of nodes with that many cores')
 
-    memory = raw_input(textwrap.fill(textwrap.dedent("""\
-              How much memory do you want to use
-              on each node? (default=%dGb) : """ % smallest_mem).strip()))
-    if memory == '':
-        memory = smallest_mem
-    else:
-        memory = int(memory)
-        if memory > max_mem:
-            print(textwrap.fill(textwrap.dedent("""\
-                You cannot request more than the maximum
-                memory on this type of node. (%d)""" % (max_mem),100)))
-            exit()
-
-    print('Using %d node(s) with %d cores and %d Gb\n' % 
-        (n_nodes, n_cores, memory))
+    if gen == 'ikt':
+        print('Using %d node(s) with %d cores\n' % 
+            (n_nodes, n_cores))
+    elif gen == 'mox':
+        smallest_mem = 128
+        memory = raw_input(textwrap.fill(textwrap.dedent("""\
+                  How much memory do you want to use
+                  on each node? (default=%dGb) : """ % smallest_mem).strip()))
+        if memory == '': memory = smallest_mem
+        else: memory = int(memory)
+        print('Using %d node(s) with %d cores and %d Gb\n' % 
+            (n_nodes, n_cores, memory))
     #--------------------------------------
 
     #--------------------------------------
@@ -246,9 +254,9 @@ def get_user_input():
         g16_versions = ['a03']
         gdv_versions = ['i03','i03p','i04p','i06','i06p','i09']
     elif gen == 'mox':
-        g09_versions = ['a02','e01']
-        g16_versions = ['a03', 'b01']
-        gdv_versions = ['i03','i03p','i04p','i06p','i10pp','i11p','i13','i13p']
+        g09_versions = []
+        g16_versions = ['a03']
+        gdv_versions = ['i03p','i04p','i06p','i10pp']
     print('Which version of Gaussian would you like to use?')
     for version in g09_versions: print('[g09.'+version+']',end=' ') 
     for version in g16_versions: print('[g16.'+version+']',end=' ') 
@@ -276,8 +284,7 @@ def get_user_input():
     else:
         bad_version = True
     if bad_version:
-        print('Choose a valid version of Gaussian. Not %s.%s' 
-            % (version_name[0], version_name[1]))
+        print('Choose a valid version of Gaussian. Not %s.%s' % (version_name[0], version_name[1]))
         sys.exit()
     print('Using the '+version+' version of Gaussian\n')  
     #--------------------------------------
@@ -308,17 +315,14 @@ def get_user_input():
 
     #--------------------------------------
     # Get a name for the .pbs script.
-    extension = 'sh'
-    if len(f_input) == 1:
-        f_output = raw_input(textwrap.fill(textwrap.dedent("""\
-                   What should the .%s script be named? 
-                   (default=%s.%s) : """ % ( extension, f_input[0][0].strip(), 
-                                             extension) )))
-        if f_output == '': f_output = [f_input[0][0]+'.'+extension]
-        else: f_output = [f_output+'.'+extension]
-    # AW - assume default if multiple files submitted
-    else:
-        f_output = [f_i[0]+'.'+extension for f_i in f_input]
+    extension = 'pbs'
+    if gen == 'mox': extension = 'sh'
+    f_output = raw_input(textwrap.fill(textwrap.dedent("""\
+               What should the .%s script be named? 
+               (default=%s.%s) : """ % ( extension, f_input[0].strip(), 
+                                         extension) )))
+    if f_output == '': f_output = f_input[0]+'.'+extension
+    else: f_output = f_output+'.'+extension
     #--------------------------------------
 
 #----------------------------------------------------------------------------
@@ -327,333 +331,295 @@ def get_user_input():
 def check_Gaussian_input():
     """Read the Gaussian input file and check for problems."""
 
-    for fil in f_input:
-        gauss_input = str(fil[0])+'.'+str(fil[1])
-        f = open(gauss_input,'r')
-        contents = f.readlines()
-        found_linda, found_ssh, exit, gb = False, False, False, False
-        memory, nproc = 0, 1
-        warnings = []
- 
-        for line in contents:
-            if 'lindaworker' in line.lower(): found_linda = True 
-            if 'usessh' in line.lower(): found_ssh = True 
-            if 'mem' in line.lower():
-                mem_line = line.split('=')
-                mem_line[-1] = mem_line[-1].strip()
-                if 'gb' in mem_line[1].lower(): 
-                    gb = True
-                    mem = mem_line[1].lower().split('gb')
-                    memory = int(mem[0])
-                else:
-                    gb = False
-                    warning = textwrap.dedent("""\
-                        This script only checks the memory specfication if it 
-                        is in Gb. Your calculation may still be fine, but 
-                        this script won't check. This is just a warning.""")
-                    warnings.append(warning)
-            if 'nproc' in line.lower():
-                nproc_line = line.split('=')
-                nproc_line[-1] = nproc_line[-1].strip()
-                nproc = int(nproc_line[1])
-            if 'chk' in line.lower():
-                pwd = Popen('pwd',stdout=PIPE,shell=True).stdout.read().strip()
-                if 'c:' in line.lower():
-                    warning = textwrap.dedent("""\
-                        Your checkpoint file includes the C: drive and there is
-                        no C: drive on this machine. Please update the path for
-                        your checkpoint file.""")
-                    warnings.append(warning)
-                    exit = True
-                if '/' in line.lower() or '\\' in line.lower() and \
-                    pwd not in line.lower():
-                    warning = textwrap.dedent("""\
-                        The path specified for your checkpoint file is not the 
-                        current directory. You may want to change this. This is 
-                        just a warning.""")
-                    warnings.append(warning)
- 
-        if gb and allocation == 'hyak-stf':
-            if gen == 'ikt' and memory > 32:
+    gauss_input = str(f_input[0])+'.'+str(f_input[1])
+    f = open(gauss_input,'r')
+    contents = f.readlines()
+    found_linda = False
+    memory = 0
+    nproc  = 0
+    warnings = []
+    exit = False
+
+    for line in contents:
+        if 'lindaworker' in line.lower(): found_linda = True 
+        if 'mem' in line.lower():
+            mem_line = line.split('=')
+            mem_line[-1] = mem_line[-1].strip()
+            if 'gb' in mem_line[1].lower(): 
+                gb = True
+                mem = mem_line[1].lower().split('gb')
+                memory = int(mem[0])
+            else:
+                gb = False
                 warning = textwrap.dedent("""\
-                    Generally you don't want to specify more than half the
-                    memory on a node. You've asked for %dGb and most STF
-                    nodes only have 64Gb.
-                    This is just a warning.""" % memory)
+                    This script only checks the memory specfication if it 
+                    is in Gb. Your calculation may still be fine, but 
+                    this script won't check. This is just a warning.""")
                 warnings.append(warning)
-            elif gen == 'mox' and memory > 64:
-                warning = textwrap.dedent("""\
-                    Generally you don't want to specify more than half the
-                    memory on a node. You've asked for %dGb and most STF
-                    nodes only have 128Gb.
-                    This is just a warning.""" % memory)
-                warnings.append(warning)
- 
-        if allocation == 'hyak-stf':
-            if gen == 'ikt' and nproc > 16:
-                warning = textwrap.dedent("""\
-                    You should not specify to use more cores than the number
-                    available on your node. The STF nodes have 16 cores
-                    and you've asked for %d cores. Please lower the number 
-                    of cores you've requested in your input file.
-                    Not forming PBS script.""" % nproc)
-                warnings.append(warning)
-                exit = True
-            elif gen == 'mox' and nproc > 28:
-                warning = textwrap.dedent("""\
-                    You should not specify to use more cores than the number
-                    available on your node. The STF nodes have 28 cores
-                    and you've asked for %d cores. Please lower the number 
-                    of cores you've requested in your input file.
-                    Not forming SBATCH script.""" % nproc)
-                warnings.append(warning)
-                exit = True
-  
-        if allocation == 'hyak-stf':
-            if gen == 'ikt' and nproc < 16:
-                warning = textwrap.dedent("""\
-                    You usually want to use all the cores on a node. The
-                    STF nodes have 16 cores and you've asked for %d core(s).
-                    This is just a warning.""" % nproc)
-                warnings.append(warning)
-            elif gen == 'mox' and nproc < 28:
-                warning = textwrap.dedent("""\
-                    You usually want to use all the cores on a node. The
-                    STF nodes have 28 cores and you've asked for %d cores.
-                    This is just a warning.""" % nproc)
-                warnings.append(warning)
- 
-        if linda and not found_linda:
+        if 'nproc' in line.lower():
+            nproc_line = line.split('=')
+            nproc_line[-1] = nproc_line[-1].strip()
+            nproc = int(nproc_line[1])
+
+    if gb and allocation == 'hyak-stf':
+        if gen == 'ikt' and memory > 32:
             warning = textwrap.dedent("""\
-                Your input file does not contain %lindaworker, but
-                you have asked to use more than one node. Please add this
-                line or request only one node. Not forming PBS script.""")
+                Generally you don't want to specify more than half the
+                memory on a node. You've asked for %dGb and most STF
+                nodes only have 64Gb.
+                This is just a warning.""" % memory)
+            warnings.append(warning)
+        elif gen == 'mox' and memory > 64:
+            warning = textwrap.dedent("""\
+                Generally you don't want to specify more than half the
+                memory on a node. You've asked for %dGb and most STF
+                nodes only have 128Gb.
+                This is just a warning.""" % memory)
+            warnings.append(warning)
+
+    if allocation == 'hyak-stf':
+        if gen == 'ikt' and nproc > 16:
+            warning = textwrap.dedent("""\
+                You should not specify to use more cores than the number
+                available on your node. The STF nodes have 16 cores
+                and you've asked for %d cores. Please lower the number 
+                of cores you've requested in your input file.
+                Not forming PBS script.""" % nproc)
             warnings.append(warning)
             exit = True
-       
-        if linda and not found_ssh:
+        elif gen == 'mox' and nproc > 28:
             warning = textwrap.dedent("""\
-                Your input file does not contain %UseSSH, but
-                you have asked to use more than one node. This is can be
-                a problem for some versions of Gaussian. Please add this
-                line or request only one node. This is just a warning.""")
-            warnings.append(warning)
-  
-        if found_linda and n_nodes == 1:
-            warning = textwrap.dedent("""\
-                Your input file contains %lindaworker, but you have
-                only asked to use one node. Please remove this line or
-                request more than one node. Not forming PBS script.""")
+                You should not specify to use more cores than the number
+                available on your node. The STF nodes have 28 cores
+                and you've asked for %d cores. Please lower the number 
+                of cores you've requested in your input file.
+                Not forming SBATCH script.""" % nproc)
             warnings.append(warning)
             exit = True
  
-        # Print warnings and exit if there are too many errors.
-        if len(warnings) > 0:
-          print('\n'+'#'*40+'\n'
-               +' '*15+'WARNINGS\n'
-               +'#'*40)
-        for warning in warnings:
-            print('\n'+textwrap.fill(warning, 60))
-        if exit:
-          print("\nExiting without writing PBS file.\n")
-          sys.exit()
+    if allocation == 'hyak-stf':
+        if gen == 'ikt' and nproc < 16:
+            warning = textwrap.dedent("""\
+                You usually want to use all the cores on a node. The
+                STF nodes have 16 cores and you've asked for %d cores.
+                This is just a warning.""" % nproc)
+            warnings.append(warning)
+        elif gen == 'mox' and nproc < 28:
+            warning = textwrap.dedent("""\
+                You usually want to use all the cores on a node. The
+                STF nodes have 28 cores and you've asked for %d cores.
+                This is just a warning.""" % nproc)
+            warnings.append(warning)
+
+    if linda and not found_linda:
+        warning = textwrap.dedent("""\
+            Your input file does not contain %lindaworker, but
+            you have asked to use more than one node. Please add this
+            line or request only one node. Not forming PBS script.""")
+        warnings.append(warning)
+        exit = True
+    
+    if found_linda and n_nodes == 1:
+        warning = textwrap.dedent("""\
+            Your input file contains %lindaworker, but you have
+            only asked to use one node. Please remove this line or
+            request more than one node. Not forming PBS script.""")
+        warnings.append(warning)
+        exit = True
+
+    # Print warnings and exit if there are too many errors.
+    if len(warnings) > 0:
+      print('\n'+'#'*40+'\n'
+           +' '*15+'WARNINGS\n'
+           +'#'*40)
+    for warning in warnings:
+        print('\n'+textwrap.fill(warning, 60))
+    if exit:
+      print("\nExiting without writing PBS file.\n")
+      sys.exit()
 #----------------------------------------------------------------------------
 
 #----------------------------------------------------------------------------
-def write_torque_script():
+def write_Ikt_script():
     """Make a .pbs script based on user specifications."""
 
-    for i in range(len(f_input)):
+    gauss_input = str(f_input[0])+'.'+str(f_input[1])
+    print('Writing to '+f_output+'\n')
+    pwd = Popen('pwd',stdout=PIPE,shell=True).stdout.read().strip()
+    f = open(f_output,'w')
 
-        gauss_input = str(f_input[i][0])+'.'+str(f_input[i][1])
-        print('Writing to '+f_output[i]+'\n')
-        pwd = Popen('pwd',stdout=PIPE,shell=True).stdout.read().strip()
-        f = open(f_output[i],'w')
- 
-        f.write(textwrap.dedent("""\
-            #!/bin/bash
-            #PBS -N %s
-            #PBS -l nodes=%d:ppn=%d,feature=%dcore""" 
-            % (f_input[i][0], n_nodes, n_cores, n_cores))) 
-        if queue != 'bf':
-            f.write('\n#PBS -l walltime=%d:00:00\n' % time)
-        else:
-            f.write('\n#PBS -l walltime=0:%d:00\n' % time)
-        f.write(textwrap.dedent("""\
-            #PBS -j oe
-            #PBS -o %s
-            #PBS -d %s\n""" % (pwd, pwd)))
-        if queue == 'batch': 
-            f.write('#PBS -W group_list=%s\n' % allocation)
-        f.write(textwrap.dedent("""\
-            #PBS -q %s
- 
-            # load Gaussian environment
-            module load contrib/%s
- 
-            # debugging information
-            HYAK_NPE=$(wc -l < $PBS_NODEFILE) 
-            HYAK_NNODES=$(uniq $PBS_NODEFILE | wc -l ) 
-            echo "**** Job Debugging Information ****"
-            echo "This job will run on $HYAK_NPE CPUs on $HYAK_NNODES nodes"
-            echo ""
-            echo Node:CPUs Used 
-            uniq -c $PBS_NODEFILE | awk '{print $2 ":" $1}' 
-            echo "SHARED LIBRARY CHECK"
-            ldd ./test
-            echo "ENVIRONMENT VARIABLES"
-            set
-            echo "**********************************************" """ 
-            % (queue, version)))
- 
-        if linda:
-            f.write(textwrap.dedent("""\
-                \n
-                # add linda nodes
-                HYAK_NNODES=$(uniq $PBS_NODEFILE | wc -l )
-                nodes=()
-                nodes+=(`uniq -c $PBS_NODEFILE | awk '{print $2}'`)
-                for ((i=0; i<${#nodes[*]}-1; i++));
-                do
-                \tstring+=${nodes[$i]}
-                \tstring+=","
-                done 
-                string+=${nodes[$HYAK_NNODES-1]}
-                sed -i -e "s/%%LindaWorker.*/%%LindaWorker=$string/Ig" %s
- 
-                # check that the Linda nodes are correct
-                lindaline=(`grep -i 'lindaworker' %s`)
-                if [[ $lindaline == *$string ]]
-                then
-                \techo "Using the correct nodes for Linda"
-                else
-                \techo "Using the wrong nodes for Linda"
-                \techo "Nodes assigned by scheduler = $string"
-                \techo "Line in Gaussian input file = $lindaline"
-                \texit 1
-                fi """ % (gauss_input, gauss_input)))
- 
-        if queue == 'bf':
-            f.write(textwrap.dedent("""\
-              \n
-              # copy last log file to another name
-              num=`ls -l %s*.log | wc -l`
-              let "num += 1"
-              cp %s.log %s$num.log""" % (f_input[i][0], f_input[i][0], 
-              f_input[i][0])))
- 
-        if 'gdv' in version: 
-            command = 'gdv'
-        elif 'g16' in version:
-            command = 'g16'
-        else:
-            command = 'g09'
+    f.write(textwrap.dedent("""\
+        #!/bin/bash
+        #PBS -N %s
+        #PBS -l nodes=%d:ppn=%d,feature=%dcore""" 
+        % (f_input[0], n_nodes, n_cores, n_cores))) 
+    if queue != 'bf':
+      f.write('\n#PBS -l walltime=%d:00:00\n' % time)
+    else:
+      f.write('\n#PBS -l walltime=0:%d:00\n' % time)
+    f.write(textwrap.dedent("""\
+        #PBS -j oe
+        #PBS -o %s
+        #PBS -d %s""" % (pwd, pwd)))
+    if queue == 'batch': 
+        f.write('\n#PBS -W group_list=%s\n' % allocation)
+    f.write(textwrap.dedent("""\
+        #PBS -q %s
+
+        # load Gaussian environment
+        module load contrib/%s
+
+        # debugging information
+        HYAK_NPE=$(wc -l < $PBS_NODEFILE) 
+        HYAK_NNODES=$(uniq $PBS_NODEFILE | wc -l ) 
+        echo "**** Job Debugging Information ****"
+        echo "This job will run on $HYAK_NPE CPUs on $HYAK_NNODES nodes"
+        echo ""
+        echo Node:CPUs Used 
+        uniq -c $PBS_NODEFILE | awk '{print $2 ":" $1}' 
+        echo "SHARED LIBRARY CHECK"
+        ldd ./test
+        echo "ENVIRONMENT VARIABLES"
+        set
+        echo "**********************************************" """ 
+        % (queue, version)))
+
+    if linda:
         f.write(textwrap.dedent("""\
             \n
-            # run Gaussian
-            %s %s 
- 
-            exit 0 """ % (command, gauss_input)))
+            # add linda nodes
+            HYAK_NNODES=$(uniq $PBS_NODEFILE | wc -l )
+            nodes=()
+            nodes+=(`uniq -c $PBS_NODEFILE | awk '{print $2}'`)
+            for ((i=0; i<${#nodes[*]}-1; i++));
+            do
+            \tstring+=${nodes[$i]}
+            \tstring+=","
+            done 
+            string+=${nodes[$HYAK_NNODES-1]}
+            sed -i -e "s/%%LindaWorker.*/%%LindaWorker=$string/Ig" %s
 
-        print("""Please run 'qsub %s' to submit to the scheduler\n""" 
-              % f_output[i])
+            # check that the Linda nodes are correct
+            lindaline=(`grep -i 'lindaworker' %s`)
+            if [[ $lindaline == *$string ]]
+            then
+            \techo "Using the correct nodes for Linda"
+            else
+            \techo "Using the wrong nodes for Linda"
+            \techo "Nodes assigned by scheduler = $string"
+            \techo "Line in Gaussian input file = $lindaline"
+            \texit 1
+            fi """ % (gauss_input, gauss_input)))
+
+    if queue == 'bf':
+        f.write(textwrap.dedent("""\
+          \n
+          # copy last log file to another name
+          num=`ls -l %s*.log | wc -l`
+          let "num += 1"
+          cp %s.log %s$num.log""" % (f_input[0], f_input[0], f_input[0])))
+
+    if 'gdv' in version: 
+        command = 'gdv'
+    elif 'g16' in version:
+        command = 'g16'
+    else:
+        command = 'g09'
+    f.write(textwrap.dedent("""\
+        \n
+        # run Gaussian
+        %s %s 
+
+        exit 0 """ % (command, gauss_input)))
+
+    print("""Please run 'qsub %s' to submit to the scheduler\n""" % f_output)
 #----------------------------------------------------------------------------
 
 #----------------------------------------------------------------------------
-def write_slurm_script():
+def write_Mox_script():
     """Make a .sh script based on user specifications."""
 
-    # Loop over the input files
-    for i in range(len(f_input)):
+    gauss_input = str(f_input[0])+'.'+str(f_input[1])
+    print('Writing to '+f_output+'\n')
+    pwd = Popen('pwd',stdout=PIPE,shell=True).stdout.read().strip()
+    f = open(f_output,'w')
+    short_name = re.split('-',allocation)[1]
+    partition, account = short_name, short_name
+    if queue == 'bf' or queue == 'ckpt':
+        partition = queue
+        account = short_name+'-ckpt'
 
-        gauss_input = str(f_input[i][0])+'.'+str(f_input[i][1])
-        print('Writing to '+f_output[i]+'\n')
-        pwd = Popen('pwd',stdout=PIPE,shell=True).stdout.read().strip()
-        f = open(f_output[i],'w')
-        short_name = re.split('-',allocation)[1]
-        partition, account = short_name, short_name
-        if queue == 'bf' or queue == 'ckpt':
-            partition = queue
-            account = short_name+'-ckpt'
- 
-        f.write(textwrap.dedent("""\
-            #!/bin/bash
-            #SBATCH --job-name=%s
-            #SBATCH --nodes=%d""" % (f_input[i][0], n_nodes)))
-        if queue == 'bf' or queue == 'ckpt':
-            f.write('\n#SBATCH --time=0:%d:00\n' % time)
-        else:
-            f.write('\n#SBATCH --time=%d:00:00\n' % time)
-        f.write(textwrap.dedent("""\
-            #SBATCH --mem=%dG
-            #SBATCH --workdir=%s
-            #SBATCH --partition=%s
-            #SBATCH --account=%s\n\n"""
-            % (memory, pwd, partition, account))) 
-        f.write(textwrap.dedent("""\
-            # load Gaussian environment
-            module load contrib/%s
- 
-            # debugging information
-            echo "**** Job Debugging Information ****"
-            echo "This job will run on $SLURM_JOB_NODELIST"
-            echo ""
-            echo "ENVIRONMENT VARIABLES"
-            set
-            echo "**********************************************" """ 
-            % version))
- 
-        if linda:
-            f.write(textwrap.dedent("""\
-                \n
-                # add linda nodes
-                nodes=()
-                nodes+=(`scontrol show hostnames $SLURM_JOB_NODELIST `)
-                for ((i=0; i<${#nodes[*]}-1; i++));
-                do
-                \tstring+=${nodes[$i]}
-                \tstring+=","
-                done 
-                string+=${nodes[$SLURM_NNODES-1]}
-                sed -i -e "s/%%LindaWorker.*/%%LindaWorker=$string/Ig" %s
- 
-                # check that the Linda nodes are correct
-                lindaline=(`grep -i 'lindaworker' %s`)
-                if [[ $lindaline == *$string ]]
-                then
-                \techo "Using the correct nodes for Linda"
-                else
-                \techo "Using the wrong nodes for Linda"
-                \techo "Nodes assigned by scheduler = $string"
-                \techo "Line in Gaussian input file = $lindaline"
-                \texit 1
-                fi """ % (gauss_input, gauss_input)))
- 
-        if queue == 'bf' or queue == 'ckpt':
-            f.write(textwrap.dedent("""\
-              \n
-              # copy last log file to another name
-              num=`ls -l %s*.log | wc -l`
-              let "num += 1"
-              cp %s.log %s$num.log""" % (f_input[i][0], f_input[i][0], 
-              f_input[i][0])))
- 
-        if 'gdv' in version: 
-            command = 'gdv'
-        elif 'g16' in version:
-            command = 'g16'
-        else:
-            command = 'g09'
+    f.write(textwrap.dedent("""\
+        #!/bin/bash
+        #SBATCH --job-name=%s
+        #SBATCH --nodes=%d 
+        #SBATCH --time=%d:00:00
+        #SBATCH --mem=%dG
+        #SBATCH --workdir=%s
+        #SBATCH --partition=%s
+        #SBATCH --account=%s\n\n""" 
+        % (f_input[0], n_nodes, time, memory, pwd, partition, account))) 
+    f.write(textwrap.dedent("""\
+        # load Gaussian environment
+        module load contrib/%s
+
+        # debugging information
+        echo "**** Job Debugging Information ****"
+        echo "This job will run on $SLURM_JOB_NODELIST"
+        echo ""
+        echo "ENVIRONMENT VARIABLES"
+        set
+        echo "**********************************************" """ 
+        % version))
+
+    if linda:
         f.write(textwrap.dedent("""\
             \n
-            # run Gaussian
-            %s %s 
- 
-            exit 0 """ % (command, gauss_input)))
+            # add linda nodes
+            nodes=()
+            nodes+=(`scontrol show hostnames $SLURM_JOB_NODELIST `)
+            for ((i=0; i<${#nodes[*]}-1; i++));
+            do
+            \tstring+=${nodes[$i]}
+            \tstring+=","
+            done 
+            string+=${nodes[$SLURM_NNODES-1]}
+            sed -i -e "s/%%LindaWorker.*/%%LindaWorker=$string/Ig" %s
 
-        print("""Please run 'sbatch %s' to submit to the scheduler\n""" 
-              % f_output[i])
+            # check that the Linda nodes are correct
+            lindaline=(`grep -i 'lindaworker' %s`)
+            if [[ $lindaline == *$string ]]
+            then
+            \techo "Using the correct nodes for Linda"
+            else
+            \techo "Using the wrong nodes for Linda"
+            \techo "Nodes assigned by scheduler = $string"
+            \techo "Line in Gaussian input file = $lindaline"
+            \texit 1
+            fi """ % (gauss_input, gauss_input)))
 
+    if queue == 'bf' or queue == 'ckpt':
+        f.write(textwrap.dedent("""\
+          \n
+          # copy last log file to another name
+          num=`ls -l %s*.log | wc -l`
+          let "num += 1"
+          cp %s.log %s$num.log""" % (f_input[0], f_input[0], f_input[0])))
+
+    if 'gdv' in version: 
+        command = 'gdv'
+    elif 'g16' in version:
+        command = 'g16'
+    else:
+        command = 'g09'
+    f.write(textwrap.dedent("""\
+        \n
+        # run Gaussian
+        %s %s 
+
+        exit 0 """ % (command, gauss_input)))
+
+    print("""Please run 'sbatch %s' to submit to the scheduler\n""" % f_output)
 #----------------------------------------------------------------------------
 
 #----------------------------------------------------------------------------
@@ -682,6 +648,7 @@ def print_help():
 if __name__ == '__main__':
     get_user_input()
     check_Gaussian_input()
-    write_slurm_script()
+    if   gen == 'ikt': write_Ikt_script()
+    elif gen == 'mox': write_Mox_script()
 #----------------------------------------------------------------------------
 

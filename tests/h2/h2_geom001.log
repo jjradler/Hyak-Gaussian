@@ -1,7 +1,7 @@
  Entering Gaussian System, Link 0=g09
  Initial command:
- /sw/contrib/gaussian/g09/A02/g09/l1.exe /scr/Gau-17799.inp -scrdir=/scr/
- Entering Link 1 = /sw/contrib/gaussian/g09/A02/g09/l1.exe PID=     17800.
+ /sw/contrib/gaussian/g09/A02/g09/l1.exe /scr/Gau-17983.inp -scrdir=/scr/
+ Entering Link 1 = /sw/contrib/gaussian/g09/A02/g09/l1.exe PID=     17984.
   
  Copyright (c) 1988,1990,1992,1993,1995,1998,2003,2009, Gaussian, Inc.
                   All Rights Reserved.
@@ -90,7 +90,7 @@
  5/5=2,38=5/2;
  6/7=2,8=2,9=2,10=2,28=1/1;
  99/5=1,9=1/99;
- Leave Link    1 at Fri Oct  5 15:47:55 2018, MaxMem=16106127360 cpu:       2.7
+ Leave Link    1 at Fri Oct  5 16:47:40 2018, MaxMem=16106127360 cpu:       3.2
  (Enter /sw/contrib/gaussian/g09/A02/g09/l101.exe)
  ----------------------------------------------------------------------
  Test calculation for H2 diatomic for batch script development. Equilib
@@ -114,7 +114,7 @@
  AtZEff=   0.0000000   0.0000000
  NQMom=    0.0000000   0.0000000
  NMagM=    2.7928460   2.7928460
- Leave Link  101 at Fri Oct  5 15:47:55 2018, MaxMem=16106127360 cpu:       1.2
+ Leave Link  101 at Fri Oct  5 16:47:40 2018, MaxMem=16106127360 cpu:       0.9
  (Enter /sw/contrib/gaussian/g09/A02/g09/l202.exe)
                           Input orientation:                          
  ---------------------------------------------------------------------
@@ -139,7 +139,7 @@
       2          1           0        0.000000    0.000000   -0.370424
  ---------------------------------------------------------------------
  Rotational constants (GHZ):      0.0000000   1827.2741695   1827.2741695
- Leave Link  202 at Fri Oct  5 15:47:55 2018, MaxMem=16106127360 cpu:       0.3
+ Leave Link  202 at Fri Oct  5 16:47:40 2018, MaxMem=16106127360 cpu:       0.3
  (Enter /sw/contrib/gaussian/g09/A02/g09/l301.exe)
  Standard basis: STO-3G (5D, 7F)
  Ernie: Thresh=  0.10000D-02 Tol=  0.10000D-05 Strict=F.
@@ -170,7 +170,7 @@
  ScaDFX=  0.800000  0.720000  1.000000  0.810000 ScalE2=  1.000000  1.000000
  IRadAn=      0 IRanWt=     -1 IRanGd=            0 ICorTp=0
  NAtoms=    2 NActive=    2 NUniq=    1 SFac= 3.00D+00 NAtFMM=   80 NAOKFM=F Big=F
- Leave Link  301 at Fri Oct  5 15:47:55 2018, MaxMem=16106127360 cpu:       1.2
+ Leave Link  301 at Fri Oct  5 16:47:40 2018, MaxMem=16106127360 cpu:       1.6
  (Enter /sw/contrib/gaussian/g09/A02/g09/l302.exe)
  NPDir=0 NMtPBC=     1 NCelOv=     1 NCel=       1 NClECP=     1 NCelD=      1
          NCelK=      1 NCelE2=     1 NClLst=     1 CellRange=     0.0.
@@ -182,10 +182,10 @@
  IXCGrd= 2 IRadAn=           0 IRanWt=          -1 IRanGd=           0 AccXCQ= 1.00D-10.
  NRdTot=     120 NPtTot=       15168 NUsed=       16047 NTot=       16079
  NSgBfM=     2     2     2     2     2 NAtAll=     2     2.
- Leave Link  302 at Fri Oct  5 15:47:55 2018, MaxMem=16106127360 cpu:       3.2
+ Leave Link  302 at Fri Oct  5 16:47:41 2018, MaxMem=16106127360 cpu:       4.9
  (Enter /sw/contrib/gaussian/g09/A02/g09/l303.exe)
  DipDrv:  MaxL=1.
- Leave Link  303 at Fri Oct  5 15:47:55 2018, MaxMem=16106127360 cpu:       0.6
+ Leave Link  303 at Fri Oct  5 16:47:41 2018, MaxMem=16106127360 cpu:       1.0
  (Enter /sw/contrib/gaussian/g09/A02/g09/l401.exe)
  Harris functional with IExCor=  402 diagonalized for initial guess.
  ExpMin= 1.69D-01 ExpMax= 3.43D+00 ExpMxC= 3.43D+00 IAcc=1 IRadAn=         1 AccDes= 0.00D+00
@@ -202,7 +202,7 @@
        Occupied  (SGG)
        Virtual   (SGU)
  The electronic state of the initial guess is 1-SGG.
- Leave Link  401 at Fri Oct  5 15:47:56 2018, MaxMem=16106127360 cpu:       3.1
+ Leave Link  401 at Fri Oct  5 16:47:41 2018, MaxMem=16106127360 cpu:       4.4
  (Enter /sw/contrib/gaussian/g09/A02/g09/l502.exe)
  Closed shell SCF:
  Requested convergence on RMS density matrix=1.00D-08 within 128 cycles.
@@ -222,9 +222,9 @@
 
  Cycle   1  Pass 0  IDiag  1:
  E= -1.16540342576529    
- DIIS: error= 3.69D-17 at cycle   1 NSaved=   1.
- NSaved= 1 IEnMin= 1 EnMin= -1.16540342576529     IErMin= 1 ErrMin= 3.69D-17
- ErrMax= 3.69D-17 EMaxC= 1.00D-01 BMatC= 5.45D-33 BMatP= 5.45D-33
+ DIIS: error= 7.38D-17 at cycle   1 NSaved=   1.
+ NSaved= 1 IEnMin= 1 EnMin= -1.16540342576529     IErMin= 1 ErrMin= 7.38D-17
+ ErrMax= 7.38D-17 EMaxC= 1.00D-01 BMatC= 2.18D-32 BMatP= 2.18D-32
  IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
  Coeff-Com:  0.100D+01
  Coeff:      0.100D+01
@@ -257,7 +257,7 @@
  SCF Done:  E(RB3LYP) =  -1.16540089405     A.U. after    3 cycles
              Convg  =    0.0000D+00             -V/T =  1.9703
  KE= 1.201079497196D+00 PE=-3.706673622402D+00 EE= 6.259075168689D-01
- Leave Link  502 at Fri Oct  5 15:47:56 2018, MaxMem=16106127360 cpu:       1.8
+ Leave Link  502 at Fri Oct  5 16:47:42 2018, MaxMem=16106127360 cpu:       4.3
  (Enter /sw/contrib/gaussian/g09/A02/g09/l601.exe)
  Copying SCF densities to generalized density rwf, IOpCl= 0 IROHF=0.
 
@@ -314,9 +314,9 @@
  Symmetry B2U  KE= 0.000000000000D+00
  Symmetry B3U  KE= 0.000000000000D+00
  No NMR shielding tensors so no spin-rotation constants.
- Leave Link  601 at Fri Oct  5 15:47:56 2018, MaxMem=16106127360 cpu:       5.4
+ Leave Link  601 at Fri Oct  5 16:47:42 2018, MaxMem=16106127360 cpu:       8.3
  (Enter /sw/contrib/gaussian/g09/A02/g09/l9999.exe)
- 1\1\GINC-N2236\SP\RB3LYP\STO-3G\H2\JJRADLER\05-Oct-2018\0\\#p b3lyp/st
+ 1\1\GINC-N2162\SP\RB3LYP\STO-3G\H2\JJRADLER\05-Oct-2018\0\\#p b3lyp/st
  o-3g gfprint units=AU\\Test calculation for H2 diatomic for batch scri
  pt development. Equilibrium bond length 1.4 Bohr radii. Closed shell, 
  2e- wavefunction --date=2018.10.05\\0,1\H,0,0.,0.,0.\H,0,0.,0.,0.74084
@@ -325,8 +325,10 @@
  PG=D*H [C*(H1.H1)]\\@
 
 
- PATIENCE IS THE ABILITY TO IDLE YOUR MOTOR WHEN
- YOU FEEL LIKE STRIPPING YOUR GEARS.
- Job cpu time:  0 days  0 hours  0 minutes 22.1 seconds.
+ THE THINKER DIES, BUT HIS THOUGHTS ARE BEYOND THE 
+ REACH OF DESTRUCTION.  MEN ARE MORTAL; BUT IDEAS 
+ ARE IMMORTAL.
+                              -- WALTER LIPPMANN
+ Job cpu time:  0 days  0 hours  0 minutes 33.6 seconds.
  File lengths (MBytes):  RWF=      5 Int=      0 D2E=      0 Chk=      8 Scr=      1
- Normal termination of Gaussian 09 at Fri Oct  5 15:47:56 2018.
+ Normal termination of Gaussian 09 at Fri Oct  5 16:47:42 2018.

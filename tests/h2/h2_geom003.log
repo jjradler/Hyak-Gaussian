@@ -1,7 +1,7 @@
  Entering Gaussian System, Link 0=g09
  Initial command:
- /sw/contrib/gaussian/g09/A02/g09/l1.exe /scr/Gau-20077.inp -scrdir=/scr/
- Entering Link 1 = /sw/contrib/gaussian/g09/A02/g09/l1.exe PID=     20078.
+ /sw/contrib/gaussian/g09/A02/g09/l1.exe /scr/Gau-18768.inp -scrdir=/scr/
+ Entering Link 1 = /sw/contrib/gaussian/g09/A02/g09/l1.exe PID=     18769.
   
  Copyright (c) 1988,1990,1992,1993,1995,1998,2003,2009, Gaussian, Inc.
                   All Rights Reserved.
@@ -102,7 +102,7 @@
  2/9=110/2;
  6/7=2,8=2,9=2,10=2,19=2,28=1/1;
  99/9=1/99;
- Leave Link    1 at Fri Oct  5 15:47:57 2018, MaxMem=16106127360 cpu:       1.8
+ Leave Link    1 at Fri Oct  5 16:47:47 2018, MaxMem=16106127360 cpu:       2.2
  (Enter /sw/contrib/gaussian/g09/A02/g09/l101.exe)
  ----------------------------------------------------------------------
  Test calculation for H2 diatomic for batch script development. Equilib
@@ -126,7 +126,7 @@
  AtZEff=   0.0000000   0.0000000
  NQMom=    0.0000000   0.0000000
  NMagM=    2.7928460   2.7928460
- Leave Link  101 at Fri Oct  5 15:47:58 2018, MaxMem=16106127360 cpu:       1.2
+ Leave Link  101 at Fri Oct  5 16:47:47 2018, MaxMem=16106127360 cpu:       1.7
  (Enter /sw/contrib/gaussian/g09/A02/g09/l103.exe)
 
  GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
@@ -144,7 +144,7 @@
  Number of steps in this run=  20 maximum allowed number of steps= 100.
  GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
 
- Leave Link  103 at Fri Oct  5 15:47:58 2018, MaxMem=16106127360 cpu:       0.2
+ Leave Link  103 at Fri Oct  5 16:47:47 2018, MaxMem=16106127360 cpu:       0.3
  (Enter /sw/contrib/gaussian/g09/A02/g09/l202.exe)
                           Input orientation:                          
  ---------------------------------------------------------------------
@@ -169,7 +169,7 @@
       2          1           0        0.000000    0.000000   -0.317506
  ---------------------------------------------------------------------
  Rotational constants (GHZ):      0.0000000   2487.1231752   2487.1231752
- Leave Link  202 at Fri Oct  5 15:47:58 2018, MaxMem=16106127360 cpu:       0.3
+ Leave Link  202 at Fri Oct  5 16:47:47 2018, MaxMem=16106127360 cpu:       0.4
  (Enter /sw/contrib/gaussian/g09/A02/g09/l301.exe)
  Standard basis: STO-3G (5D, 7F)
  Ernie: Thresh=  0.10000D-02 Tol=  0.10000D-05 Strict=F.
@@ -200,7 +200,7 @@
  ScaDFX=  0.800000  0.720000  1.000000  0.810000 ScalE2=  1.000000  1.000000
  IRadAn=      0 IRanWt=     -1 IRanGd=            0 ICorTp=0
  NAtoms=    2 NActive=    2 NUniq=    1 SFac= 3.00D+00 NAtFMM=   80 NAOKFM=F Big=F
- Leave Link  301 at Fri Oct  5 15:47:58 2018, MaxMem=16106127360 cpu:       1.3
+ Leave Link  301 at Fri Oct  5 16:47:47 2018, MaxMem=16106127360 cpu:       1.3
  (Enter /sw/contrib/gaussian/g09/A02/g09/l302.exe)
  NPDir=0 NMtPBC=     1 NCelOv=     1 NCel=       1 NClECP=     1 NCelD=      1
          NCelK=      1 NCelE2=     1 NClLst=     1 CellRange=     0.0.
@@ -212,10 +212,10 @@
  IXCGrd= 2 IRadAn=           0 IRanWt=          -1 IRanGd=           0 AccXCQ= 1.00D-10.
  NRdTot=     120 NPtTot=       15168 NUsed=       16047 NTot=       16079
  NSgBfM=     2     2     2     2     2 NAtAll=     2     2.
- Leave Link  302 at Fri Oct  5 15:47:58 2018, MaxMem=16106127360 cpu:       3.6
+ Leave Link  302 at Fri Oct  5 16:47:47 2018, MaxMem=16106127360 cpu:       3.6
  (Enter /sw/contrib/gaussian/g09/A02/g09/l303.exe)
  DipDrv:  MaxL=1.
- Leave Link  303 at Fri Oct  5 15:47:58 2018, MaxMem=16106127360 cpu:       0.6
+ Leave Link  303 at Fri Oct  5 16:47:48 2018, MaxMem=16106127360 cpu:       0.6
  (Enter /sw/contrib/gaussian/g09/A02/g09/l401.exe)
  Harris functional with IExCor=  402 diagonalized for initial guess.
  ExpMin= 1.69D-01 ExpMax= 3.43D+00 ExpMxC= 3.43D+00 IAcc=1 IRadAn=         1 AccDes= 0.00D+00
@@ -232,7 +232,7 @@
        Occupied  (SGG)
        Virtual   (SGU)
  The electronic state of the initial guess is 1-SGG.
- Leave Link  401 at Fri Oct  5 15:47:58 2018, MaxMem=16106127360 cpu:       3.4
+ Leave Link  401 at Fri Oct  5 16:47:48 2018, MaxMem=16106127360 cpu:       3.2
  (Enter /sw/contrib/gaussian/g09/A02/g09/l502.exe)
  Closed shell SCF:
  Requested convergence on RMS density matrix=1.00D-08 within 128 cycles.
@@ -275,9 +275,9 @@
 
  Cycle   3  Pass 1  IDiag  1:
  E= -1.15603965249880     Delta-E=        0.000000000000 Rises=F Damp=F
- DIIS: error= 1.22D-16 at cycle   2 NSaved=   2.
- NSaved= 2 IEnMin= 1 EnMin= -1.15603965249880     IErMin= 1 ErrMin= 8.11D-17
- ErrMax= 1.22D-16 EMaxC= 1.00D-01 BMatC= 5.91D-32 BMatP= 2.63D-32
+ DIIS: error= 4.05D-17 at cycle   2 NSaved=   2.
+ NSaved= 2 IEnMin= 1 EnMin= -1.15603965249880     IErMin= 2 ErrMin= 4.05D-17
+ ErrMax= 4.05D-17 EMaxC= 1.00D-01 BMatC= 6.57D-33 BMatP= 2.63D-32
  IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
  Coeff-Com:  0.000D+00 0.100D+01
  Coeff:      0.000D+00 0.100D+01
@@ -287,7 +287,7 @@
  SCF Done:  E(RB3LYP) =  -1.15603965250     A.U. after    3 cycles
              Convg  =    0.0000D+00             -V/T =  1.9386
  KE= 1.231671265714D+00 PE=-3.870081693683D+00 EE= 6.490374421365D-01
- Leave Link  502 at Fri Oct  5 15:47:58 2018, MaxMem=16106127360 cpu:       1.7
+ Leave Link  502 at Fri Oct  5 16:47:48 2018, MaxMem=16106127360 cpu:       1.7
  (Enter /sw/contrib/gaussian/g09/A02/g09/l601.exe)
  Copying SCF densities to generalized density rwf, IOpCl= 0 IROHF=0.
 
@@ -344,14 +344,14 @@
  Symmetry B2U  KE= 0.000000000000D+00
  Symmetry B3U  KE= 0.000000000000D+00
  No NMR shielding tensors so no spin-rotation constants.
- Leave Link  601 at Fri Oct  5 15:47:58 2018, MaxMem=16106127360 cpu:       5.1
+ Leave Link  601 at Fri Oct  5 16:47:48 2018, MaxMem=16106127360 cpu:       4.3
  (Enter /sw/contrib/gaussian/g09/A02/g09/l701.exe)
  Compute integral first derivatives.
  ... and contract with generalized density number  0.
- Leave Link  701 at Fri Oct  5 15:47:58 2018, MaxMem=16106127360 cpu:       4.9
+ Leave Link  701 at Fri Oct  5 16:47:48 2018, MaxMem=16106127360 cpu:       5.9
  (Enter /sw/contrib/gaussian/g09/A02/g09/l702.exe)
  L702 exits ... SP integral derivatives will be done elsewhere.
- Leave Link  702 at Fri Oct  5 15:47:59 2018, MaxMem=16106127360 cpu:       0.5
+ Leave Link  702 at Fri Oct  5 16:47:49 2018, MaxMem=16106127360 cpu:       0.5
  (Enter /sw/contrib/gaussian/g09/A02/g09/l703.exe)
  Compute integral first derivatives, UseDBF=F ICtDFT=           0.
  Integral derivatives from FoFDir, PRISM(SPDF).
@@ -362,7 +362,7 @@
          NMat0=    1 NMatS0=    1 NMatT0=    0 NMatD0=    1 NMtDS0=    0 NMtDT0=    0
          I1Cent=           0 NGrid=           0.
  Petite list used in FoFCou.
- Leave Link  703 at Fri Oct  5 15:47:59 2018, MaxMem=16106127360 cpu:       2.0
+ Leave Link  703 at Fri Oct  5 16:47:49 2018, MaxMem=16106127360 cpu:       3.8
  (Enter /sw/contrib/gaussian/g09/A02/g09/l716.exe)
  Dipole        =-6.16297582D-32 0.00000000D+00 0.00000000D+00
  ***** Axes restored to original set *****
@@ -374,7 +374,7 @@
       2        1          -0.000000000   -0.000000000    0.119123044
  -------------------------------------------------------------------
  Cartesian Forces:  Max     0.119123044 RMS     0.068775722
- Leave Link  716 at Fri Oct  5 15:47:59 2018, MaxMem=16106127360 cpu:       0.5
+ Leave Link  716 at Fri Oct  5 16:47:49 2018, MaxMem=16106127360 cpu:       1.0
  (Enter /sw/contrib/gaussian/g09/A02/g09/l103.exe)
 
  GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
@@ -394,7 +394,7 @@
  Linear search not attempted -- first point.
  Iteration  1 RMS(Cart)=  0.14048898 RMS(Int)=  0.00000000
  Iteration  2 RMS(Cart)=  0.00000000 RMS(Int)=  0.00000000
- ClnCor:  largest displacement from symmetrization is 6.08D-18 for atom     1.
+ ClnCor:  largest displacement from symmetrization is 2.22D-16 for atom     2.
  Variable       Old X    -DE/DX   Delta X   Delta X   Delta X     New X
                                  (Linear)    (Quad)   (Total)
     R1        1.20000   0.11912   0.00000   0.19868   0.19868   1.39868
@@ -406,7 +406,7 @@
  Predicted change in Energy=-1.230090D-02
  GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
 
- Leave Link  103 at Fri Oct  5 15:47:59 2018, MaxMem=16106127360 cpu:       0.2
+ Leave Link  103 at Fri Oct  5 16:47:49 2018, MaxMem=16106127360 cpu:       0.4
  (Enter /sw/contrib/gaussian/g09/A02/g09/l202.exe)
                           Input orientation:                          
  ---------------------------------------------------------------------
@@ -431,7 +431,7 @@
       2          1           0        0.000000    0.000000   -0.370075
  ---------------------------------------------------------------------
  Rotational constants (GHZ):      0.0000000   1830.7210481   1830.7210481
- Leave Link  202 at Fri Oct  5 15:47:59 2018, MaxMem=16106127360 cpu:       0.2
+ Leave Link  202 at Fri Oct  5 16:47:49 2018, MaxMem=16106127360 cpu:       0.4
  (Enter /sw/contrib/gaussian/g09/A02/g09/l301.exe)
  Standard basis: STO-3G (5D, 7F)
  Ernie: Thresh=  0.10000D-02 Tol=  0.10000D-05 Strict=F.
@@ -453,7 +453,7 @@
  ScaDFX=  0.800000  0.720000  1.000000  0.810000 ScalE2=  1.000000  1.000000
  IRadAn=      0 IRanWt=     -1 IRanGd=            0 ICorTp=0
  NAtoms=    2 NActive=    2 NUniq=    1 SFac= 3.00D+00 NAtFMM=   80 NAOKFM=F Big=F
- Leave Link  301 at Fri Oct  5 15:47:59 2018, MaxMem=16106127360 cpu:       0.9
+ Leave Link  301 at Fri Oct  5 16:47:49 2018, MaxMem=16106127360 cpu:       1.2
  (Enter /sw/contrib/gaussian/g09/A02/g09/l302.exe)
  NPDir=0 NMtPBC=     1 NCelOv=     1 NCel=       1 NClECP=     1 NCelD=      1
          NCelK=      1 NCelE2=     1 NClLst=     1 CellRange=     0.0.
@@ -465,10 +465,10 @@
  IXCGrd= 2 IRadAn=           0 IRanWt=          -1 IRanGd=           0 AccXCQ= 1.00D-10.
  NRdTot=     120 NPtTot=       15168 NUsed=       16047 NTot=       16079
  NSgBfM=     2     2     2     2     2 NAtAll=     2     2.
- Leave Link  302 at Fri Oct  5 15:47:59 2018, MaxMem=16106127360 cpu:       2.8
+ Leave Link  302 at Fri Oct  5 16:47:50 2018, MaxMem=16106127360 cpu:       3.4
  (Enter /sw/contrib/gaussian/g09/A02/g09/l303.exe)
  DipDrv:  MaxL=1.
- Leave Link  303 at Fri Oct  5 15:47:59 2018, MaxMem=16106127360 cpu:       0.5
+ Leave Link  303 at Fri Oct  5 16:47:50 2018, MaxMem=16106127360 cpu:       0.5
  (Enter /sw/contrib/gaussian/g09/A02/g09/l401.exe)
  Initial guess read from the read-write file.
  B after Tr=     0.000000    0.000000    0.000000
@@ -490,7 +490,7 @@
          I1Cent=           4 NGrid=           0.
  Petite list used in FoFCou.
  Harris En= -1.17114511967033    
- Leave Link  401 at Fri Oct  5 15:47:59 2018, MaxMem=16106127360 cpu:       3.0
+ Leave Link  401 at Fri Oct  5 16:47:50 2018, MaxMem=16106127360 cpu:       3.2
  (Enter /sw/contrib/gaussian/g09/A02/g09/l502.exe)
  Closed shell SCF:
  Requested convergence on RMS density matrix=1.00D-08 within 128 cycles.
@@ -532,27 +532,27 @@
  RMSDP=0.00D+00 MaxDP=0.00D+00 DE= 2.55D-06 OVMax= 0.00D+00
 
  Cycle   3  Pass 1  IDiag  1:
- E= -1.16541536347310     Delta-E=        0.000000000000 Rises=F Damp=F
+ E= -1.16541536347310     Delta-E=       -0.000000000000 Rises=F Damp=F
  DIIS: error= 0.00D+00 at cycle   2 NSaved=   2.
- NSaved= 2 IEnMin= 1 EnMin= -1.16541536347310     IErMin= 1 ErrMin= 0.00D+00
+ NSaved= 2 IEnMin= 2 EnMin= -1.16541536347310     IErMin= 1 ErrMin= 0.00D+00
  ErrMax= 0.00D+00 EMaxC= 1.00D-01 BMatC= 0.00D+00 BMatP= 0.00D+00
  IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
  Coeff-Com:  0.000D+00 0.100D+01
  Coeff:      0.000D+00 0.100D+01
  Gap=     0.842 Goal=   None    Shift=    0.000
- RMSDP=0.00D+00 MaxDP=0.00D+00 DE= 0.00D+00 OVMax= 0.00D+00
+ RMSDP=0.00D+00 MaxDP=0.00D+00 DE=-2.22D-16 OVMax= 0.00D+00
 
  SCF Done:  E(RB3LYP) =  -1.16541536347     A.U. after    3 cycles
              Convg  =    0.0000D+00             -V/T =  1.9702
  KE= 1.201250320357D+00 PE=-3.707688077985D+00 EE= 6.260633008642D-01
- Leave Link  502 at Fri Oct  5 15:47:59 2018, MaxMem=16106127360 cpu:       1.6
+ Leave Link  502 at Fri Oct  5 16:47:50 2018, MaxMem=16106127360 cpu:       1.5
  (Enter /sw/contrib/gaussian/g09/A02/g09/l701.exe)
  Compute integral first derivatives.
  ... and contract with generalized density number  0.
- Leave Link  701 at Fri Oct  5 15:47:59 2018, MaxMem=16106127360 cpu:       3.9
+ Leave Link  701 at Fri Oct  5 16:47:50 2018, MaxMem=16106127360 cpu:       4.0
  (Enter /sw/contrib/gaussian/g09/A02/g09/l702.exe)
  L702 exits ... SP integral derivatives will be done elsewhere.
- Leave Link  702 at Fri Oct  5 15:47:59 2018, MaxMem=16106127360 cpu:       0.5
+ Leave Link  702 at Fri Oct  5 16:47:50 2018, MaxMem=16106127360 cpu:       0.6
  (Enter /sw/contrib/gaussian/g09/A02/g09/l703.exe)
  Compute integral first derivatives, UseDBF=F ICtDFT=           0.
  Integral derivatives from FoFDir, PRISM(SPDF).
@@ -563,9 +563,9 @@
          NMat0=    1 NMatS0=    1 NMatT0=    0 NMatD0=    1 NMtDS0=    0 NMtDT0=    0
          I1Cent=           0 NGrid=           0.
  Petite list used in FoFCou.
- Leave Link  703 at Fri Oct  5 15:47:59 2018, MaxMem=16106127360 cpu:       1.9
+ Leave Link  703 at Fri Oct  5 16:47:50 2018, MaxMem=16106127360 cpu:       1.9
  (Enter /sw/contrib/gaussian/g09/A02/g09/l716.exe)
- Dipole        =-4.93038066D-32 0.00000000D+00 0.00000000D+00
+ Dipole        =-6.16297582D-32 0.00000000D+00 1.11022302D-16
  ***** Axes restored to original set *****
  -------------------------------------------------------------------
  Center     Atomic                   Forces (Hartrees/Bohr)
@@ -575,7 +575,7 @@
       2        1          -0.000000000   -0.000000000   -0.010669258
  -------------------------------------------------------------------
  Cartesian Forces:  Max     0.010669258 RMS     0.006159899
- Leave Link  716 at Fri Oct  5 15:47:59 2018, MaxMem=16106127360 cpu:       0.4
+ Leave Link  716 at Fri Oct  5 16:47:50 2018, MaxMem=16106127360 cpu:       0.4
  (Enter /sw/contrib/gaussian/g09/A02/g09/l103.exe)
 
  GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
@@ -612,7 +612,7 @@
  Predicted change in Energy=-7.444175D-05
  GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
 
- Leave Link  103 at Fri Oct  5 15:47:59 2018, MaxMem=16106127360 cpu:       0.2
+ Leave Link  103 at Fri Oct  5 16:47:50 2018, MaxMem=16106127360 cpu:       0.2
  (Enter /sw/contrib/gaussian/g09/A02/g09/l202.exe)
                           Input orientation:                          
  ---------------------------------------------------------------------
@@ -637,7 +637,7 @@
       2          1           0        0.000000    0.000000   -0.364105
  ---------------------------------------------------------------------
  Rotational constants (GHZ):      0.0000000   1891.2485565   1891.2485565
- Leave Link  202 at Fri Oct  5 15:48:00 2018, MaxMem=16106127360 cpu:       0.2
+ Leave Link  202 at Fri Oct  5 16:47:50 2018, MaxMem=16106127360 cpu:       0.5
  (Enter /sw/contrib/gaussian/g09/A02/g09/l301.exe)
  Standard basis: STO-3G (5D, 7F)
  Ernie: Thresh=  0.10000D-02 Tol=  0.10000D-05 Strict=F.
@@ -659,7 +659,7 @@
  ScaDFX=  0.800000  0.720000  1.000000  0.810000 ScalE2=  1.000000  1.000000
  IRadAn=      0 IRanWt=     -1 IRanGd=            0 ICorTp=0
  NAtoms=    2 NActive=    2 NUniq=    1 SFac= 3.00D+00 NAtFMM=   80 NAOKFM=F Big=F
- Leave Link  301 at Fri Oct  5 15:48:00 2018, MaxMem=16106127360 cpu:       0.9
+ Leave Link  301 at Fri Oct  5 16:47:50 2018, MaxMem=16106127360 cpu:       0.9
  (Enter /sw/contrib/gaussian/g09/A02/g09/l302.exe)
  NPDir=0 NMtPBC=     1 NCelOv=     1 NCel=       1 NClECP=     1 NCelD=      1
          NCelK=      1 NCelE2=     1 NClLst=     1 CellRange=     0.0.
@@ -671,10 +671,10 @@
  IXCGrd= 2 IRadAn=           0 IRanWt=          -1 IRanGd=           0 AccXCQ= 1.00D-10.
  NRdTot=     120 NPtTot=       15168 NUsed=       16047 NTot=       16079
  NSgBfM=     2     2     2     2     2 NAtAll=     2     2.
- Leave Link  302 at Fri Oct  5 15:48:00 2018, MaxMem=16106127360 cpu:       2.9
+ Leave Link  302 at Fri Oct  5 16:47:51 2018, MaxMem=16106127360 cpu:       3.3
  (Enter /sw/contrib/gaussian/g09/A02/g09/l303.exe)
  DipDrv:  MaxL=1.
- Leave Link  303 at Fri Oct  5 15:48:00 2018, MaxMem=16106127360 cpu:       0.5
+ Leave Link  303 at Fri Oct  5 16:47:51 2018, MaxMem=16106127360 cpu:       0.5
  (Enter /sw/contrib/gaussian/g09/A02/g09/l401.exe)
  Initial guess read from the read-write file.
  B after Tr=     0.000000    0.000000    0.000000
@@ -684,7 +684,7 @@
        Occupied  (SGG)
        Virtual   (SGU)
  The electronic state of the initial guess is 1-SGG.
- Leave Link  401 at Fri Oct  5 15:48:00 2018, MaxMem=16106127360 cpu:       1.3
+ Leave Link  401 at Fri Oct  5 16:47:51 2018, MaxMem=16106127360 cpu:       1.3
  (Enter /sw/contrib/gaussian/g09/A02/g09/l502.exe)
  Closed shell SCF:
  Requested convergence on RMS density matrix=1.00D-08 within 128 cycles.
@@ -703,9 +703,9 @@
 
  Cycle   1  Pass 1  IDiag  1:
  E= -1.16553546988956    
- DIIS: error= 1.12D-16 at cycle   1 NSaved=   1.
- NSaved= 1 IEnMin= 1 EnMin= -1.16553546988956     IErMin= 1 ErrMin= 1.12D-16
- ErrMax= 1.12D-16 EMaxC= 1.00D-01 BMatC= 5.00D-32 BMatP= 5.00D-32
+ DIIS: error= 7.46D-17 at cycle   1 NSaved=   1.
+ NSaved= 1 IEnMin= 1 EnMin= -1.16553546988956     IErMin= 1 ErrMin= 7.46D-17
+ ErrMax= 7.46D-17 EMaxC= 1.00D-01 BMatC= 2.22D-32 BMatP= 2.22D-32
  IDIUse=1 WtCom= 1.00D+00 WtEn= 0.00D+00
  Coeff-Com:  0.100D+01
  Coeff:      0.100D+01
@@ -715,14 +715,14 @@
  SCF Done:  E(RB3LYP) =  -1.16553546989     A.U. after    1 cycles
              Convg  =    0.0000D+00             -V/T =  1.9679
  KE= 1.204234837671D+00 PE=-3.725175817283D+00 EE= 6.287234950462D-01
- Leave Link  502 at Fri Oct  5 15:48:00 2018, MaxMem=16106127360 cpu:       1.3
+ Leave Link  502 at Fri Oct  5 16:47:51 2018, MaxMem=16106127360 cpu:       1.4
  (Enter /sw/contrib/gaussian/g09/A02/g09/l701.exe)
  Compute integral first derivatives.
  ... and contract with generalized density number  0.
- Leave Link  701 at Fri Oct  5 15:48:00 2018, MaxMem=16106127360 cpu:       4.6
+ Leave Link  701 at Fri Oct  5 16:47:51 2018, MaxMem=16106127360 cpu:       4.5
  (Enter /sw/contrib/gaussian/g09/A02/g09/l702.exe)
  L702 exits ... SP integral derivatives will be done elsewhere.
- Leave Link  702 at Fri Oct  5 15:48:00 2018, MaxMem=16106127360 cpu:       0.5
+ Leave Link  702 at Fri Oct  5 16:47:51 2018, MaxMem=16106127360 cpu:       0.6
  (Enter /sw/contrib/gaussian/g09/A02/g09/l703.exe)
  Compute integral first derivatives, UseDBF=F ICtDFT=           0.
  Integral derivatives from FoFDir, PRISM(SPDF).
@@ -733,9 +733,9 @@
          NMat0=    1 NMatS0=    1 NMatT0=    0 NMatD0=    1 NMtDS0=    0 NMtDT0=    0
          I1Cent=           0 NGrid=           0.
  Petite list used in FoFCou.
- Leave Link  703 at Fri Oct  5 15:48:00 2018, MaxMem=16106127360 cpu:       2.1
+ Leave Link  703 at Fri Oct  5 16:47:51 2018, MaxMem=16106127360 cpu:       1.9
  (Enter /sw/contrib/gaussian/g09/A02/g09/l716.exe)
- Dipole        =-6.16297582D-32 0.00000000D+00 0.00000000D+00
+ Dipole        =-7.39557099D-32 0.00000000D+00 0.00000000D+00
  ***** Axes restored to original set *****
  -------------------------------------------------------------------
  Center     Atomic                   Forces (Hartrees/Bohr)
@@ -745,7 +745,7 @@
       2        1          -0.000000000   -0.000000000    0.000158323
  -------------------------------------------------------------------
  Cartesian Forces:  Max     0.000158323 RMS     0.000091408
- Leave Link  716 at Fri Oct  5 15:48:00 2018, MaxMem=16106127360 cpu:       0.4
+ Leave Link  716 at Fri Oct  5 16:47:51 2018, MaxMem=16106127360 cpu:       0.4
  (Enter /sw/contrib/gaussian/g09/A02/g09/l103.exe)
 
  GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
@@ -770,7 +770,7 @@
  Quartic linear search produced a step of -0.01410.
  Iteration  1 RMS(Cart)=  0.00022495 RMS(Int)=  0.00000000
  Iteration  2 RMS(Cart)=  0.00000000 RMS(Int)=  0.00000000
- ClnCor:  largest displacement from symmetrization is 5.55D-17 for atom     1.
+ ClnCor:  largest displacement from symmetrization is 9.74D-21 for atom     1.
  Variable       Old X    -DE/DX   Delta X   Delta X   Delta X     New X
                                  (Linear)    (Quad)   (Total)
     R1        1.37612   0.00016   0.00032   0.00000   0.00032   1.37644
@@ -793,7 +793,7 @@
  GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad
 
  Largest change from initial coordinates is atom    1       0.047 Angstoms.
- Leave Link  103 at Fri Oct  5 15:48:00 2018, MaxMem=16106127360 cpu:       0.2
+ Leave Link  103 at Fri Oct  5 16:47:51 2018, MaxMem=16106127360 cpu:       0.2
  (Enter /sw/contrib/gaussian/g09/A02/g09/l202.exe)
                           Input orientation:                          
  ---------------------------------------------------------------------
@@ -818,7 +818,7 @@
       2          1           0        0.000000    0.000000   -0.364105
  ---------------------------------------------------------------------
  Rotational constants (GHZ):      0.0000000   1891.2485565   1891.2485565
- Leave Link  202 at Fri Oct  5 15:48:00 2018, MaxMem=16106127360 cpu:       0.2
+ Leave Link  202 at Fri Oct  5 16:47:51 2018, MaxMem=16106127360 cpu:       0.2
  (Enter /sw/contrib/gaussian/g09/A02/g09/l601.exe)
  Copying SCF densities to generalized density rwf, IOpCl= 0 IROHF=0.
 
@@ -875,9 +875,9 @@
  Symmetry B2U  KE= 0.000000000000D+00
  Symmetry B3U  KE= 0.000000000000D+00
  No NMR shielding tensors so no spin-rotation constants.
- Leave Link  601 at Fri Oct  5 15:48:00 2018, MaxMem=16106127360 cpu:       4.3
+ Leave Link  601 at Fri Oct  5 16:47:51 2018, MaxMem=16106127360 cpu:       4.0
  (Enter /sw/contrib/gaussian/g09/A02/g09/l9999.exe)
- 1\1\GINC-N2090\FOpt\RB3LYP\STO-3G\H2\JJRADLER\05-Oct-2018\0\\#p b3lyp/
+ 1\1\GINC-N2162\FOpt\RB3LYP\STO-3G\H2\JJRADLER\05-Oct-2018\0\\#p b3lyp/
  sto-3g opt gfprint units=AU\\Test calculation for H2 diatomic for batc
  h script development. Equilibrium bond length 1.4 Bohr radii. Closed s
  hell, 2e- wavefunction --date=2018.10.05\\0,1\H,0.,0.,-0.0465987427\H,
@@ -886,13 +886,9 @@
  10154,0.20308,0.,0.,0.\PG=D*H [C*(H1.H1)]\\@
 
 
- GOD GAVE US TWO ENDS... ONE TO SIT ON...    
- AND THE OTHER TO THINK WITH...              
- YOUR SUCCESS DEPENDS UPON WHICH END YOU     
- USE THE MOST...                             
-                                             
- IT'S A CASE OF HEADS YOU WIN TAILS YOU LOSE.
-          SOURCE UNKNOWN(IT'S JUST AS WELL.) 
- Job cpu time:  0 days  0 hours  1 minutes 10.5 seconds.
+ IT'S WHAT A FELLER THINKS HE KNOWS THAT HURTS HIM...
+                    ------
+           KIN HUBBARD
+ Job cpu time:  0 days  0 hours  1 minutes 24.4 seconds.
  File lengths (MBytes):  RWF=      5 Int=      0 D2E=      0 Chk=      8 Scr=      1
- Normal termination of Gaussian 09 at Fri Oct  5 15:48:00 2018.
+ Normal termination of Gaussian 09 at Fri Oct  5 16:47:52 2018.

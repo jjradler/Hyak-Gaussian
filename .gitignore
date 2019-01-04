@@ -1,0 +1,13 @@
+## GAUSSIAN FILES TO IGNORE
+*.d2e
+*.inp
+*.chk
+*.fchk
+
+## CLUSTER CORE DUMP FILES TO IGNORE
+core.*
+
+## CLUSTER STANDARD OUTPUT TO IGNORE
+*.out
+slurm*
+
